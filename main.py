@@ -9,7 +9,24 @@ import urllib.request
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-model = joblib.load("model_xgb.pkl")  # now using class-weighted XGBoost only
+def download_file_from_google_drive(drive_url, local_path):
+    file_id = drive_url.split("/d/")[1].split("/")[0]
+    download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    if not os.path.exists(local_path):
+        print(f"Downloading {local_path} from {download_url}...")
+        urllib.request.urlretrieve(download_url, local_path)
+
+# Download model files if not present
+files_to_download = {
+    "model_xgb.pkl": "https://drive.google.com/file/d/1A7FqRRi8Rm9l88Q5n0u4GamKSugBBwCK/view?usp=drive_link",
+    "scaler.pkl": "https://drive.google.com/file/d/1s6iDX0l2C4MJP1Tapkru820dmvCNop5q/view?usp=drive_link",
+    "features.pkl": "https://drive.google.com/file/d/1aFVQpDU89pDUGw_o0mkN7J0W8FbDyd6C/view?usp=drive_link"
+}
+
+for filename, url in files_to_download.items():
+    download_file_from_google_drive(url, filename)
+
+model = joblib.load("model_xgb.pkl")
 scaler = joblib.load("scaler.pkl")
 FEATURES = joblib.load("features.pkl")
 
