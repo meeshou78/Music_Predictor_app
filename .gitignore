@@ -1,3 +1,5 @@
-__pycache__/
 *.pkl
-.env
+*.csv
+*.png
+__pycache__/
+.ipynb_checkpoints/
